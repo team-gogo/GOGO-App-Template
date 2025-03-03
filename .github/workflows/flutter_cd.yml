@@ -1,4 +1,4 @@
-name: Flutter Master CI
+name: Flutter Master CD
 
 on:
   release:
@@ -37,12 +37,22 @@ jobs:
       - name: Analyze project source
         run: flutter analyze
 
+      # package일 경우
       - name: Publish
         uses: k-paxian/dart-package-publisher@master
         with:
           credentialJson: ${{ secrets.CREDENTIAL_JSON }}
           flutter: true
           skipTests: true
+
+      # app일 경우
+      - name: Build Test IOS
+        run: flutter build ios --release --no-codesign
+
+      - name: Build Test Android
+        run : |
+          flutter build apk
+          flutter build appbundle
 
       - name: Set timestamp
         id: timestamp
